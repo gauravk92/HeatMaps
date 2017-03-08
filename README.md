@@ -2,7 +2,7 @@
 
 [View Demo](https://cdn.rawgit.com/gauravk92/HeatMaps/master/projects/Heatmaps/build/output/0.html)
 
-![Heatmaps Screenshot](https://github.com/gauravk92/HeatMaps/raw/master/Screenshot 2017-03-07 21.47.08.png)
+![Heatmaps Screenshot](https://github.com/gauravk92/HeatMaps/raw/master/Screenshot 2017-03-07 21.47.08.jpg)
 
 ## Setup & Install
 
