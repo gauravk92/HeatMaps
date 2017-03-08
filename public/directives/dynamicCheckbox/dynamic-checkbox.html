@@ -1,0 +1,19 @@
+<label for="{{::guid}}" ng-if="!other">
+    <input id="{{::guid}}" type="checkbox" name="{{::checkboxName}}" aria-label="{{::checkboxValue}}" value="{{::checkboxValue}}" autofocus ng-if="autofocus">
+    <input id="{{::guid}}" type="checkbox" name="{{::checkboxName}}" aria-label="{{::checkboxValue}}" value="{{::checkboxValue}}" ng-if="!autofocus">
+    <span ng-bind="checkboxValue"></span>
+</label>
+<div layout="row" ng-if="other">
+    <div layout="column">
+        <label for="{{::guid}}" ng-style="{'position': otherCheckboxPosition, 'top': otherCheckboxTop}">
+            <input id="{{::guid}}" type="checkbox" name="{{::checkboxName}}" aria-label="{{::checkboxValue}}" value="{{::checkboxValue}}" autofocus ng-if="autofocus">
+            <input id="{{::guid}}" type="checkbox" name="{{::checkboxName}}" aria-label="{{::checkboxValue}}" value="{{::checkboxValue}}" ng-if="!autofocus">
+        </label>
+    </div>
+    <div layout="column">
+        <md-input-container flex>
+            <label for="{{::guid}}" ng-bind="checkboxValue"></label>
+            <input type="text" name="{{::checkboxName}}_text" aria-label="{{::checkboxValue}}">
+        </md-input-container>
+    </div>
+</div>

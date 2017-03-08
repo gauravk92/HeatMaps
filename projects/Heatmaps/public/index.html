@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap-material-design/dist/css/ripples.min.css">
+    <link rel="stylesheet" href="/bower_components/bootstrap-material-design/dist/css/material.min.css">
+    <link rel="stylesheet" href="/bower_components/dropdown.js/jquery.dropdown.css">
+    <link rel="stylesheet" href="/bower_components/snackbarjs/dist/snackbar.min.css">
+
+    <link rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="/public/endorLib.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="post.css">
+</head>
+
+<body class="hide-clicks" ng-app="App">
+    <div id="body" ng-controller="AppCtrl">
+        <div id="content-wrapper">
+            <div id="content">
+                <div id="left-side" class="view">
+                    <div id="heatmap-0" class="heatmap-wrapper">
+                        <div class="heatmap">
+                            <img id="image-0" class="heatmap-image">
+
+                            <div class="snackbar-container0">
+                                <div id="snackbar0" class="snackbar">
+                                    <span class="snackbar-content" data-toggle=snackbar data-content="">Click me</span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="tooltip-left"></div>
+                    </div>
+                </div>
+                <div id="right-side" class="view">
+                    <div id="heatmap-1" class="heatmap-wrapper"></div>
+                </div>
+            </div>
+        </div>
+
+        <md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right" md-is-open="sideNavIsOpen">
+            <md-button id="md-fab" class="md-accent md-fab md-fab-bottom-right lines-button x" ng-click="sideNavToggle()">
+                <span class="lines"></span>
+            </md-button>
+
+            <md-toolbar class="md-theme-light">
+                <h1 id="SettingsTitle" class="md-toolbar-tools">
+                    <span>Settings</span>
+                </h1>
+            </md-toolbar>
+            <md-content ng-controller="RightCtrl" class="" layout-padding layout-fill>
+
+                <div id="play-container" class="container-fluid">
+
+                    <p><b>Click and drag</b> to count mouse clicks in that area.</p>
+                    <ul class="nav">
+                        <li>
+                            <a id="playbackHeatmapInput" class="btn btn-info">Play Heatmap</a>
+                        </li>
+                    </ul>
+                    <div id="loadingBarContainer" class="progress progress-striped active">
+                        <div id="loadingBar" class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                </div>
+                <div id="stop-container" class="container-fluid">
+                    <div id="playingBarContainer" class="progress progress-striped active">
+                        <div id="playingBar" class="progress-bar" style="width: 20%;"></div>
+                    </div>
+                    <ul class="nav">
+                        <li>
+                            <label>Playback</label>
+                            <a id="playbackStopInput" class="btn btn-danger">Stop</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="container-fluid">
+                    <hr>
+                    <p><b>Select from related studies</b> to view them side by side.</p>
+                    <table class="double-dropdown">
+                        <tbody>
+                            <tr>
+                                <td>
+
+                                    <ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                                <span class="dropdown-text">L</span>
+
+
+                                                <span id="dropdown-0" ng-bind="leftHeatmap"></span>
+
+
+                                                <b class="caret"></b></a>
+                                            <ul class="dropdown-menu">
+
+                                                <li ng-repeat="name in heatmaps">
+                                                    <a href="javascript:void(0)" onclick="dropdownSelect(this)" data-key="{{name}}" data-view="0">{{name}}</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td>
+                                    <ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                                <span class="dropdown-text">R</span>
+                                                <span id="dropdown-1"></span><b class="caret"></b></a>
+                                            <ul class="dropdown-menu">
+
+                                                <li ng-repeat="name in heatmaps">
+                                                    <a href="javascript:void(0)" onclick="dropdownSelect(this)" data-key="{{name}}" data-view="1">{{name}}</a>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+
+                            <tr class="text-center">
+                                <td>
+                                    <span id="total-clicks-0">--</span>&nbsp;
+                                    <span class="small">clicks</span>
+                                </td>
+                                <td>
+                                    <span id="total-clicks-1">--</span>&nbsp;
+                                    <span class="small">clicks</span>
+                                </td>
+                            </tr>
+                            <tr class="text-center">
+                                <td>
+                                    <span id="total-time-0">--</span>&nbsp;
+                                    <span class="small">sec</span>
+                                </td>
+                                <td>
+                                    <span id="total-time-1">--</span>&nbsp;
+                                    <span class="small">sec</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="container-fluid">
+                    <hr>
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <label>Zoom</label>
+                            <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="dropdown-text"></span>
+                                <span id="zoom-dropdown">100 %&nbsp;</span><b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+
+                                <li ng-repeat="zoom in zoomLevels">
+                                    <a href="javascript:void(0)" onclick="zoomSelect(this)" data-key="{{zoom}}">{{(zoom === -1 ? 'Zoom To Fit' : (zoom === -2 ? 'Zoom To Fill' : (zoom * 100) + " %"))}}&nbsp;</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="container-fluid">
+                    <hr>
+                    <ul class="nav">
+
+                        <li>
+                            <label>Point Radius</label>
+                            <input id="radiusInput" type="text" class="sliderInput" value="30">
+                            <div id="radiusSlider" class="slider slider-material-orange shor"></div>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="container-fluid">
+                    <ul class="nav">
+                        <li>
+                            <label>Time</label>
+                            <div id="playbackSlider" class="slider slider-material-red shor"></div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="container-fluid">
+                    <ul class="nav">
+                        <li>
+                            <label>Opacity</label>
+                            <input id="opacityInput" type="text" class="sliderInput" value="100">
+
+                            <div id="opacitySlider" class="slider slider-material-blue shor"></div>
+                        </li>
+                    </ul>
+                </div>
+
+            </md-content>
+        </md-sidenav>
+    </div>
+
+
+    <script id="heatmap-template" type="text/x-handlebars-template">
+        <div class="heatmap">
+            <img id="{{ imgId }}" class="heatmap-image" src="{{ imgSrc }}">
+            <div class="snackbar-container{{index}}">
+                <div id="snackbar{{index}}" class="snackbar">
+                    <span class="snackbar-content" data-toggle=snackbar data-content="">Click me</span>
+                </div>
+            </div>
+            <div class="tooltip-right"></div>
+        </div>
+    </script>
+
+    <script id="alert-template" type="text/x-handlebars-template">
+        <b>Selected Area Contains:</b>
+        <br /> {{ clicksPercent }}&#37;&nbsp;&nbsp;&asymp;&nbsp;&nbsp;<sup>{{ clicksCounted }}</sup>&frasl;<sub>{{ totalClicks }}</sub>&nbsp;&nbsp;
+        <span class="small">clicks</span>;&nbsp;&nbsp;
+        <var>t</var>&nbsp;&asymp;&nbsp;&nbsp;{{ timeMax }}s,&nbsp;{{ timePercent }}&#37;
+        <br />
+        <b>Timing Summary (sec):</b>
+        <br />
+        <table>
+            <thead>
+                <tr>
+                    <td>Min</td>
+                    <td>Mean</td>
+                    <td>Med.</td>
+                    <td>Mode</td>
+                    <td>Max</td>
+                    <td>Std.</td>
+                    <td>Var.</td>
+                    <td>MAD</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ min }}</td>
+                    <td>{{ mean }}</td>
+                    <td>{{ med }}</td>
+                    <td>{{ mode }}</td>
+                    <td>{{ max }}</td>
+                    <td>{{ std }}</td>
+                    <td>{{ var }}</td>
+                    <td>{{ mad }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </script>
+
+    <!-- Generator Modal -->
+    <!--
+    <div ng-app="App" ng-controller="GenerateController" id="GenerateScreenModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="generateLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <br>
+                <h1 class="text-center">Heatmaps Generator</h1>
+                <hr>
+                <div class="container">
+                    <div class="row">
+                        <form class="form-horizontal" name="generator">
+                            <div class="form-group">
+                                <label for="inputSortingName" class="col-sm-2 control-label">Title</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="inputSortingName" ng-minlength="1" placeholder="Search Results Page" ng-model="title" required>
+                                </div>
+                            </div>
+
+                            <br>
+                            <br>
+
+                            <div ng-repeat="item in inputItems">
+                                <div class="form-group">
+                                    <label for="{{item.nameid}}" class="col-sm-2 control-label">Name</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" ng-model="item.name" class="form-control" id="{{item.nameid}}" placeholder="Map A" ng-minlength="1" required>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="{{item.imageid}}" class="col-sm-2 control-label">Image</label>
+                                    <div class="col-sm-10">
+                                        <input type="url" ng-model="item.image" class="form-control" id="{{item.imageid}}" placeholder="http://example.com/image.png" name="{{item.imageid}}" ng-minlength="1" required>
+                                        <div class="error-container">
+                                            <small class="error invalid-url">This is an invalid URL</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="{{item.dataid}}" class="col-sm-2 control-label">CSV Data</label>
+                                    <div class="col-sm-10">
+                                        <textarea id="{{item.dataid}}" ng ng-model="item.data" class="form-control" rows="3" placeholder="x,y,t,etc.." aria-describedby="{{item.helpid}}" required ng-minlength="1"></textarea>
+                                        <span id="{{item.helpid}}" class="help-block" ng-bind="item.helptext"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button id="addButton" ng-click="addItem()" type="button" class="btn btn-default">Add Item</button>
+                                </div>
+                            </div>
+                            <div id="errorLabel" class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button type="button" class="btn flat disabled">All Fields Are Required</button>
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="form-group">
+                                <label for="{{item.jsondataid}}" class="col-sm-2 control-label">JSON Data</label>
+                                <div class="col-sm-10">
+                                    <textarea id="{{item.jsondataid}}" ng-model="jsondata" class="form-control" rows="3" placeholder="x,y,t,etc.." aria-describedby="{{item.jsonhelpid}}"></textarea>
+                                    <span id="{{item.jsonhelpid}}" class="help-block" ng-bind="item.jsonhelptext"></span>
+                                </div>
+                            </div>
+
+
+                            <div id="generateLabel" class="form-group">
+                                <div class="col-sm-offset-2 col-sm-10">
+                                    <button id="generateButton" ng-click="generate()" type="button" class="btn flat">Generate</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+-->
+
+    <div class="selection" id="ddproxy"></div>
+    <div class="selection" id="ddproxy1"></div>
+
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="/bower_components/angular-aria/angular-aria.min.js"></script>
+    <script src="/bower_components/hammerjs/hammer.min.js"></script>
+    <script src="/bower_components/angular-material/angular-material.min.js"></script>
+
+    <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/bower_components/papaparse/papaparse.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/underscore/underscore-min.js"></script>
+    <script src="/bower_components/simple-statistics/src/simple_statistics.js"></script>
+
+    <script src="/bower_components/snackbarjs/dist/snackbar.min.js"></script>
+    <script src="/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+    <script src="/bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+    <script src="/bower_components/nouislider/distribute/jquery.nouislider.min.js"></script>
+    <script src="/bower_components/dropdown.js/jquery.dropdown.js"></script>
+
+    <script src="/bower_components/jquery.event.drag-new/event.drag/jquery.event.drag.js"></script>
+    <script src="/bower_components/jquery.event.drag-new/event.drag/jquery.event.drag.live.js"></script>
+    <script src="/bower_components/jquery.event.drag-new/event.drop/jquery.event.drop.js"></script>
+    <script src="/bower_components/jquery.event.drag-new/event.drop/jquery.event.drop.live.js"></script>
+    <script src="/bower_components/excanvas/excanvas.js"></script>
+
+    <script src="/bower_components/handlebars/handlebars.min.js"></script>
+    <script src="/bower_components/jszip/dist/jszip.min.js"></script>
+    <script src="/bower_components/FileSaver/FileSaver.min.js"></script>
+    <script src="/lib/cheerio.js"></script>
+    <script src="/lib/string.js"></script>
+    <script src="/bower_components/heatmap.js.bower/src/heatmap.js"></script>
+    <script src="/public/lib.js"></script>
+    <script src="/public/endorLib.js"></script>
+    <!--
+    <script id="generateControllerJS">
+    angular.module('App', ['ngMaterial'])
+        .controller('GenerateController', function($scope) {
+            $scope.inputItems = [];
+            $scope.title = null;
+            $scope.countChar = 'A';
+            $scope.addItem = function() {
+                var inputItem = {};
+                var char = String.fromCharCode($scope.countChar.charCodeAt() + 1);
+                $scope.countChar = char;
+                inputItem['nameid'] = PubLib.guid();
+                inputItem['imageid'] = PubLib.guid();
+                inputItem['dataid'] = PubLib.guid();
+                inputItem['helpid'] = PubLib.guid();
+                inputItem['jsondataid'] = PubLib.guid();
+                inputItem['char'] = char;
+                $scope.inputItems.push(inputItem);
+
+                console.log($scope.title);
+
+            };
+            $scope.generate = function() {
+
+                if ($scope.jsondata) {
+                    var genController = new GenerateController();
+                    genController.generateWithData($scope.jsondata);
+                } else {
+
+                    var outputData = [];
+                    for (var i = 0; i < $scope.inputItems.length; i++) {
+                        var item = $scope.inputItems[i];
+                        var newItem = {};
+                        newItem['image'] = item['image'];
+                        newItem['name'] = item['name'];
+                        newItem['title'] = $scope.title;
+                        //newItem['data'] = item['data'];
+                        var results = Papa.parse(item['data'], {
+                            header: true
+                        });
+
+                        var data = results['data'];
+                        var errors = results['errors'];
+
+                        if (!(data && data.length > 0) && errors && errors.length > 0) {
+                            var helpText = '';
+                            errors.forEach(function(obj, idx) {
+                                var row = (obj['row'] ? 'Row ' + obj['row'] + ': ' : '');
+                                var code = (obj['code'] ? obj['code'] : '');
+                                var message = (obj['message'] ? obj['message'] : '');
+                                helpText += row + message + "\n";
+                            });
+
+                            item['helptext'] = helpText;
+                            return;
+                        }
+                        newItem['values'] = data;
+                        outputData.push(newItem);
+                    }
+
+
+                    console.log(outputData);
+
+                    var genController = new GenerateController();
+                    genController.generateWithData(outputData);
+
+                }
+
+            };
+            $scope.init = function() {
+                $scope.addItem();
+            };
+            $scope.init();
+        });
+
+    $(function() {
+        $(GenerateScreenModal).modal({
+            'backdrop': 'static'
+        });
+    });
+    </script>
+-->
+    <script id="controllersjs" src="controllers.js"></script>
+    <script src="app.js"></script>
+
+    <script id="loadData"></script>
+
+    <script src="testfood.js"></script>
+</body>
+
+</html>

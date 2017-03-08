@@ -1,0 +1,1 @@
+app.directive("requiredMessage",function(){return{priority:10,restrict:"A",template:'<div><div ng-message="required">This is required.</div></div>',link:function($scope,$element,$attrs){$element.css("min-height","initial")}}});

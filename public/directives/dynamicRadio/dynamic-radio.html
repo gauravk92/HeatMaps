@@ -1,0 +1,19 @@
+<label for="{{::guid}}" ng-if="!other">
+    <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" autofocus ng-if="autofocus">
+    <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" ng-if="!autofocus">
+    <span ng-bind="radioValue"></span>
+</label>
+<div layout="row" ng-if="other">
+    <div layout="column">
+        <label for="{{::guid}}" ng-style="{'position': otherRadioPosition, 'top': otherRadioTop}">
+            <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" autofocus ng-if="autofocus">
+            <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" ng-if="!autofocus">
+        </label>
+    </div>
+    <div layout="column">
+        <md-input-container flex>
+            <label for="{{::guid}}" ng-bind="radioValue"></label>
+            <input type="text" name="{{::radioName}}_text" aria-label="{{::radioValue}}">
+        </md-input-container>
+    </div>
+</div>

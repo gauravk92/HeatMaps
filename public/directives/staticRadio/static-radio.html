@@ -1,0 +1,5 @@
+<label for="{{::guid}}">
+    <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" autofocus ng-if="autofocus">
+    <input id="{{::guid}}" type="radio" name="{{::radioName}}" required aria-required="true" aria-label="{{::radioValue}}" value="{{::radioValue}}" ng-if="!autofocus">
+    <span ng-bind="radioValue"></span>
+</label>
